@@ -1,0 +1,34 @@
+NOTICE
+======
+
+This repository is licensed MIT (see LICENSE). Copyright (c) 2026 Moe Abbas.
+
+The MIT license covers original contributions by the copyright holder. It does
+not, and cannot, grant rights over third-party material that the holder does
+not own.
+
+Third-party material
+--------------------
+
+The `ideate` skill (skills/ideate/) includes eight ideation "modes" — collide,
+state, lens, assume, pattern, bound, scaffold, and simplify — that are a remix
+and substantial reworking of skills originally published by GitHub user
+agentgptsmith in `MonadFramework/.claude/skills`
+(github.com/agentgptsmith/MonadFramework).
+
+That repository was deleted before this project was published and was not
+captured under any known license; its contents are therefore unlicensed, and
+copyright in them remains with the original author. The taxonomy and core
+framing of those eight modes derive from that source. The remaining eight modes
+and all surrounding implementation — prompts, references, the role-based
+combination system, orchestration, and intake triage — are original work by the
+copyright holder.
+
+The MIT grant in LICENSE does not extend to the adapted third-party portions
+described above. If you are the original author and object to this attribution
+or to republication of the derived material, contact the copyright holder and
+it will be removed.
+
+See skills/ideate/README.md ("Acknowledgments & Provenance") for the full
+account of what derives from the original versus what is original to this
+project.
