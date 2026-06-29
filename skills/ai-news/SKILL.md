@@ -66,7 +66,7 @@ If fewer than 5 previous reports exist, use all available. If none exist, procee
 
 ### Phase 3: Research
 
-**Delegate this phase to a `web-research` agent if one is available.** This is an optional custom agent type — most installations won't have one, and the skill falls back to inline execution automatically. If the Agent tool call fails for any reason, **do not retry** — fall back immediately to executing the research inline using the same instructions.
+**Delegate this phase to a `web-researcher` agent if one is available.** This is an optional custom agent type — most installations won't have one, and the skill falls back to inline execution automatically. If the Agent tool call fails for any reason, **do not retry** — fall back immediately to executing the research inline using the same instructions.
 
 #### Agent Brief
 

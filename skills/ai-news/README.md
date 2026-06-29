@@ -54,7 +54,7 @@ The output is a markdown file with frontmatter, geographic tags per item, and st
 | Dependency       | What it adds                                                       | Without it                                                          |
 | ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
 | Obsidian vault   | Frontmatter metadata, vault-relative paths, deduplication via glob | Outputs a plain markdown file; adapt the path and strip frontmatter |
-| Agent delegation | Offloads research to a `web-research` subagent for cleaner context | Falls back to inline execution automatically (built-in)             |
+| Agent delegation | Offloads research to a `web-researcher` subagent for cleaner context | Falls back to inline execution automatically (built-in)             |
 | Playwright MCP   | Last-resort fetch for sites that block standard requests           | Skipped automatically; WebFetch + Jina handle most sources          |
 
 ### Installation
