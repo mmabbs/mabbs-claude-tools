@@ -11,6 +11,12 @@ New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | [ideate](skills/ideate/) | 16 structured thinking modes (collision, inversion, first-principles, steelmanning, and more) for working a stuck problem from a new angle. | Requires Opus |
 
+### Skill development
+
+| Skill                                | What it does                                                                                                                                              | Notes                        |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| [skill-critic](skills/skill-critic/) | Adversarial design review for your skills: a steelman argues against the design, a defender rates each criticism, a blind tester attempts a real task, and the synthesis proposes fixes. | Requires Opus · manual-only |
+
 ### Local scene & monitoring
 
 | Skill                      | What it does                                                                                       | Notes                                            |
@@ -46,6 +52,7 @@ Some skills assume a particular environment. Each skill's own `README.md` docume
 - **Obsidian-coupled** — `events` and `ai-news` write notes into an Obsidian vault. The per-skill READMEs list what to change for your own vault, or how to run them standalone.
 - **Region-configurable** — `ai-news` and `events` default to Canadian and Toronto sources. Both document how to point them elsewhere.
 - **Bundled scripts** — `events` includes a cron wrapper shell script that expects `claude` on your PATH.
+- **Bundled agents** — `skill-critic` ships three agent definition files that must be copied to `~/.claude/agents/` (its README shows the exact step). They pin `claude-opus-4-6` deliberately — bump the pin on purpose, not via the auto-upgrading `opus` alias.
 - **Model requirements** — `ideate` requires Opus. Its frameworks are reasoning-intensive; lower-tier models produce shallow output that defeats the purpose. Solo modes technically function on Sonnet but with degraded quality; combinations and agent pipelines are not recommended without Opus.
 
 ## Maintenance and contributions
