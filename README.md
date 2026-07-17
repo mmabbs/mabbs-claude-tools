@@ -16,6 +16,7 @@ New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code
 | Skill                                | What it does                                                                                                                                              | Notes                        |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
 | [skill-critic](skills/skill-critic/) | Adversarial design review for your skills: a steelman argues against the design, a defender rates each criticism, a blind tester attempts a real task, and the synthesis proposes fixes. | Requires Opus · manual-only |
+| [skill-sanitizer](skills/skill-sanitizer/) | Takes a personal skill and produces a copy ready for public release — strips personal data, applies portability fixes, writes the public README, gates the repo move with a final sweep. | manual-only |
 
 ### Local scene & monitoring
 
