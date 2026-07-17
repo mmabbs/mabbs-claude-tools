@@ -1,4 +1,4 @@
-# mabbs-claude-skills
+# mabbs-claude-tools
 A small collection of skills I use in my own Claude Code workflow, cleaned up so anyone can install them. Each is a self-contained folder you copy into a skills directory. No marketplace, plugin, or build step.
 
 New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code.claude.com/docs/en/skills)
