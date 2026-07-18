@@ -18,6 +18,12 @@ New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code
 | [skill-critic](skills/skill-critic/) | Adversarial design review for your skills: a steelman argues against the design, a defender rates each criticism, a blind tester attempts a real task, and the synthesis proposes fixes. | Requires Opus · manual-only |
 | [skill-sanitizer](skills/skill-sanitizer/) | Takes a personal skill and produces a copy ready for public release — strips personal data, applies portability fixes, writes the public README, gates the repo move with a final sweep. | manual-only |
 
+### Claude Code setup
+
+| Skill                                    | What it does                                                                                                                                                          | Notes                          |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| [config-audit](skills/config-audit/)     | Audits every Claude Code config layer (rules, skills, hooks, plugins, MCP, memory, CLAUDE.md, agents) and recommends what to relocate, consolidate, or create.        | Spawns subagents · Opus recommended |
+
 ### Local scene & monitoring
 
 | Skill                      | What it does                                                                                       | Notes                                            |
@@ -54,6 +60,7 @@ Some skills assume a particular environment. Each skill's own `README.md` docume
 - **Region-configurable** — `ai-news` and `events` default to Canadian and Toronto sources. Both document how to point them elsewhere.
 - **Bundled scripts** — `events` includes a cron wrapper shell script that expects `claude` on your PATH.
 - **Bundled agents** — `skill-critic` ships three agent definition files that must be copied to `~/.claude/agents/` (its README shows the exact step). They pin `claude-opus-4-6` deliberately — bump the pin on purpose, not via the auto-upgrading `opus` alias.
+- **Subagent-heavy** — `config-audit` spawns eight parallel scanner agents plus one reasoning agent per run. It targets Sonnet for scanning and Opus for the cross-layer reasoning; without those models it falls back to your session model.
 - **Model requirements** — `ideate` requires Opus. Its frameworks are reasoning-intensive; lower-tier models produce shallow output that defeats the purpose. Solo modes technically function on Sonnet but with degraded quality; combinations and agent pipelines are not recommended without Opus.
 
 ## Maintenance and contributions
