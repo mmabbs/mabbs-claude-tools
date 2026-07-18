@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/plugins/local/cc-health/scripts/version-detect.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
