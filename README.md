@@ -1,5 +1,5 @@
 # mabbs-claude-tools
-A small collection of skills I use in my own Claude Code workflow, cleaned up so anyone can install them. Each is a self-contained folder you copy into a skills directory. No marketplace, plugin, or build step.
+A small collection of skills I use in my own Claude workflow, cleaned up so anyone can install them. Each is a self-contained folder you copy into a skills directory (one, `research-auditor-desktop`, uploads to claude.ai/Desktop as a ZIP instead). No marketplace, plugin, or build step.
 
 New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code.claude.com/docs/en/skills)
 
@@ -10,6 +10,12 @@ New to Claude skills? Check out [Anthropic's docs on Claude Skills](https://code
 | Skill                    | What it does                                                                                                                                | Notes         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | [ideate](skills/ideate/) | 16 structured thinking modes (collision, inversion, first-principles, steelmanning, and more) for working a stuck problem from a new angle. | Requires Opus |
+
+### Research
+
+| Skill                                                        | What it does                                                                                                                                                                                  | Notes                                        |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| [research-auditor-desktop](skills/research-auditor-desktop/) | Audits citation integrity in research documents: verifies each cited source is real and reachable, checks whether sources say what the document claims, and grades on two axes (link integrity, claim accuracy). | claude.ai/Desktop upload · needs web access |
 
 ### Skill development
 
@@ -63,6 +69,7 @@ Some skills assume a particular environment. Each skill's own `README.md` docume
 - **Bundled agents** — `skill-critic` ships three agent definition files that must be copied to `~/.claude/agents/` (its README shows the exact step). They pin `claude-opus-4-6` deliberately — bump the pin on purpose, not via the auto-upgrading `opus` alias.
 - **Plugin install** — `cc-health` is a plugin, not a standalone skill. It requires the local plugin install flow (`claude plugin marketplace add` + `claude plugin install`). See its README for the full steps.
 - **Subagent-heavy** — `config-audit` spawns eight parallel scanner agents plus one reasoning agent per run. It targets Sonnet for scanning and Opus for the cross-layer reasoning; without those models it falls back to your session model.
+- **Desktop upload** — `research-auditor-desktop` is for claude.ai / Claude Desktop, not Claude Code: don't copy it into `~/.claude/skills/`. Rename the folder to `research-auditor` and upload it as a ZIP via Settings → Capabilities → Skills — its README has the exact packaging steps.
 - **Model requirements** — `ideate` requires Opus. Its frameworks are reasoning-intensive; lower-tier models produce shallow output that defeats the purpose. Solo modes technically function on Sonnet but with degraded quality; combinations and agent pipelines are not recommended without Opus.
 
 ## Maintenance and contributions
