@@ -24,16 +24,16 @@ Transform a personal Claude Code skill into a copy ready for the public GitHub r
 
 - **Never edit the live skill.** Every transformation happens on the staging copy. Before any Edit or Write, check the file path starts with the staging directory. If it doesn't, stop.
 - **Announce each stage as you enter it.** One line: stage name and what's about to happen. No silent gaps between stages.
-- **Read `references/repo-conventions.md` before Stage 1.** It holds the staging and repo paths, the triage criteria, and the final gate checklist.
+- **Read `references/repo-conventions.md` before Stage 1.** It holds the staging and repo paths, the triage criteria, and the final gate checklist. If its Paths table or sweep grep pattern still contains placeholder values, stop and ask the user to configure them per the README's Configuration section — an unconfigured sweep matches the literal placeholders instead of real identifiers and silently passes personal data through.
 - **If running non-interactively** (no user available to confirm), apply the recommended option for each decision point and mark it `AUTO-APPLIED` in the report. Do not stall waiting for input that cannot come.
 
 ## Stage 1 — Canonicalize
 
 Skills drift across copies. A staging copy from last month may be missing content the live skill gained since — or vice versa.
 
-1. Locate every copy of the skill: the given path, `~/.claude/skills/<name>/`, and the staging directory. Ask the user if Desktop `.skill` exports or vault copies exist.
+1. Locate every copy of the skill: the given path, `~/.claude/skills/<name>/`, and the staging directory. Ask the user if `.skill` exports or copies elsewhere exist (other Claude surfaces, vaults, backups). In non-interactive runs, skip the question and proceed with the copies found.
 2. If more than one copy exists, diff them (`diff -ru`). Report qualitative differences — content one copy has that another lacks, not just whitespace.
-3. Merge newer content into a single canonical version before sanitizing. Never silently pick one copy; show the user what differs and confirm the merge direction.
+3. Merge newer content into a single canonical version before sanitizing. Never silently pick one copy; show the user what differs and confirm the merge direction. The merge decision determines which content is canonical — Stage 4 writes the merged result to staging; no copy outside staging is ever modified.
 
 ## Stage 2 — Read Everything, Then Assess
 
@@ -49,9 +49,9 @@ Flag secrets (API keys, calendar IDs, account identifiers) separately and first.
 
 ## Stage 3 — Blockers and Advisories
 
-The publish decision belongs to the user. By the time this skill is invoked, they have already judged the skill worth sharing — never veto that judgment with a verdict of your own. This stage reports two kinds of findings (definitions in `references/repo-conventions.md`):
+The publish decision belongs to the user. By the time this skill is invoked, they have already judged the skill worth sharing — never veto that judgment with a verdict of your own. From your Stage 2 findings and any structural issues the read surfaced, identify items that qualify as either of two kinds (definitions in `references/repo-conventions.md`):
 
-1. **Blockers** — objective defects that make the copy non-functional for adopters: broken file references, missing scripts the SKILL.md depends on, referenced agents with no definition anywhere, half-built features. Blockers don't stop the sanitization work — they block the repo move at Stage 7 until resolved.
+1. **Blockers** — objective defects that make the copy non-functional for adopters: broken file references, missing scripts the SKILL.md depends on, referenced agents with no definition anywhere, half-built features. Blockers don't stop the sanitization work — they block the repo move at Stage 7 until resolved. Carry the list forward: restate any unresolved blockers at the end of each subsequent pass report, so the Stage 7 gate checks a current list rather than a memory from this stage.
 2. **Advisories** — observations the user should weigh, stated once and prominently, then dropped: "after sanitization every step is a placeholder — nothing but your configuration remains," "this overlaps heavily with built-in X." Advisories never block and are never re-argued. Present them and proceed.
 
 ## Stage 4 — Copy to Staging
@@ -84,7 +84,7 @@ The gate is one-way. Secrets and personal paths that reach git history are perma
 
 Two offers, neither automatic:
 
-1. **Validation run**: offer to invoke skill-critic on the staged copy. If accepted, pass this context — and instruct the orchestrator to include it in the steelman and defender prompts only, never the blind-tester's: "This skill is designed for public distribution. Absent user-specific paths, unset config values, and 'replace with your own' placeholders are intentional — do not flag them as gaps." The blind-tester stays unmodified because it simulates a genuinely fresh user.
+1. **Validation run** (optional — requires [skill-critic](../skill-critic/); skip the offer if it isn't installed): offer to run skill-critic on the staged copy. Worth offering because the staged copy stays structurally close to the live skill, so review findings usually apply to the user's live version too. If accepted, pass this note and let skill-critic route it among its reviewers: "This skill is designed for public distribution. Absent user-specific paths, unset config values, and 'replace with your own' placeholders are intentional — do not flag them as gaps. Apply this note to design-review perspectives only; any fresh-user simulation should run without it." If the validation run executes anything in staging or leads to edits there, delete generated artifacts and re-run the Stage 7 sweep before anything further moves to the repo.
 2. **Commit**: offer to commit the repo changes. Show the diff summary first.
 
 Close with a one-paragraph report: outcome (published, or held in staging with blockers named), counts per pass, advisories raised, what was written, what's pending.

@@ -17,7 +17,7 @@ These are keep/remove calls where past sanitization runs needed the user's corre
 
 ## 4. Positioning claims
 
-- **Cut categorical market claims the research can't carry.** "Fills a gap no product fills" becomes naming the actual competitors and what each does. Add honest-expectations framing where results vary.
+- **Cut categorical market claims that verification can't support.** "Fills a gap no product fills" becomes naming the actual competitors and what each does. Add honest-expectations framing where results vary.
 - **Frame overlap with built-in features as complementary halves, not competition.** "Discovery half / action half" beats "we still do something useful."
 
 ## 5. Proactive triggers

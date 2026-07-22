@@ -17,7 +17,7 @@ The paths, triage criteria, and gate checklist for this publishing pipeline. Thi
 
 - **License is MIT, held once at repo root** with a NOTICE file. Skills do not carry their own LICENSE — delete per-skill license files during sanitization.
 - **`.gitignore` at repo root covers `.DS_Store` and `__pycache__/`.** Don't add per-skill gitignore files. The mechanical pass deletes these artifacts anyway — the gitignore is backstop, not cleanup.
-- **The repo README lists every published skill.** Adding a skill means adding its row: name, one-line description, link to its folder.
+- **The repo README lists every published skill.** Adding a skill means adding its row: name, one-line description, link to its folder — e.g., `| [skill-name](skills/skill-name/) | One-line description of what it does |`. If the table doesn't exist yet, create it with those two columns.
 
 ## Blockers and advisories
 
@@ -35,7 +35,7 @@ Name what needs building. Finish all sanitization work anyway so it's ready the 
 
 - **Placeholder-shell observation.** If after sanitization every step carries a "replace with your own" placeholder or `# Configure:` comment, say so plainly: nothing but the user's configuration remains, and generic verbs (count, read, list, rebuild — things Claude does unprompted) don't count as kept mechanism. The user decides whether that's worth publishing.
 - **Built-in overlap.** Heavy overlap with a built-in or shipping feature — name the feature and the remaining gap.
-- **Unverifiable claims.** Core claims the research can't carry — flag them; the positioning rewrite in the judgment pass handles the wording.
+- **Unverifiable claims.** Core claims that verification can't support — flag them; the positioning rewrite in the judgment pass handles the wording.
 
 ## Final sweep (the gate)
 
