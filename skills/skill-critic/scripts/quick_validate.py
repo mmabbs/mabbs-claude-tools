@@ -25,7 +25,7 @@ DESC_DISPLAY_CAP = 250
 DESC_HARD_CAP = 1024
 NAME_MAX_LEN = 64
 COMPAT_MAX_LEN = 500
-ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata", "compatibility", "argument-hint", "effort"}
+ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata", "compatibility", "argument-hint", "effort", "when_to_use"}
 
 
 def check_frontmatter(content, skill_path):
