@@ -1,5 +1,4 @@
 ---
-model: claude-opus-4-6
 effort: high
 ---
 
@@ -25,6 +24,7 @@ For each bullet entry, assign exactly one category:
 3. **Removals are breaking even if the feature was obscure.** If a user relied on it, the removal breaks their setup silently.
 4. **Renames are breaking.** A renamed trigger keyword, env var, or CLI flag means existing references stop working without error.
 5. **New defaults are breaking only if they change behavior for existing users.** A new default for a new feature is just `new-feature`.
+6. **Empty or bullet-free input returns `[]`.** If the slice contains no changelog bullet entries, return an empty JSON array — never prose, never an explanation.
 
 ## Output Format
 

@@ -32,7 +32,7 @@ There is no way to decode unambiguously without checking the filesystem.
 
 ## Smart Decoding Strategy
 
-The `cc-health.py` script uses a verification approach:
+The `cc-health-chats.py` script uses a verification approach:
 
 1. Try naive decode (all `-` → `/`)
 2. If path doesn't exist, walk segments and try:
@@ -56,6 +56,6 @@ def decode_project_path(encoded: str) -> str:
 
 def verify_path_exists(encoded: str) -> tuple[bool, str]:
     """Smart decode with filesystem verification."""
-    # See cc-health.py for full implementation
+    # See cc-health-chats.py for full implementation
     pass
 ```

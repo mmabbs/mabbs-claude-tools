@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.claude/plugins/local/cc-health/scripts/version-detect.sh\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/version-detect.sh\"",
             "timeout": 5
           }
         ]

@@ -52,7 +52,6 @@ A SessionStart hook nudges you when Claude Code updates, so you know to run `/cc
 | Claude Code              | Required  | Plugin won't load                                                 |
 | Python 3.10+             | Required  | Scanners won't run (stdlib only — no pip dependencies)            |
 | Plugin support (v2.1+)   | Required  | Plugin system must be available for hook registration             |
-| Opus model access        | Optional  | `version` domain's changelog classifier requires Opus; other domains work on any model |
 
 ## Installation
 
@@ -96,6 +95,7 @@ A SessionStart hook nudges you when Claude Code updates, so you know to run `/cc
 /cc-health chats clean --confirm           # Delete matched sessions
 /cc-health chats usage                     # Disk usage by project
 /cc-health chats orphans                   # Find conversations for deleted projects
+/cc-health chats global                    # Full ~/.claude disk breakdown
 /cc-health version                         # Check for breaking changes since last run
 /cc-health full                            # Run all domains
 ```
@@ -111,11 +111,33 @@ A SessionStart hook nudges you when Claude Code updates, so you know to run `/cc
 | `scripts/lib/`                          | Shared Python modules (schema, frontmatter, TF-IDF)      |
 | `scripts/version-detect.sh`            | SessionStart hook script — detects CC version changes     |
 | `hooks/hooks.json`                      | Hook registration for the SessionStart nudge              |
-| `state/.cc-health-state.json`           | Persistent state (last-seen version, trigger-clash baseline) |
 | `tests/`                                | pytest test suite for all scanners                        |
+
+Persistent state (last-seen version, trigger-clash baseline) is written to `~/.claude/cc-health-state.json` at runtime — outside the plugin directory, so reinstalling or upgrading the plugin never wipes it.
 | `.claude-plugin/plugin.json`            | Plugin manifest                                           |
 
+## Not implemented (ideas)
+
+Checks that were scoped but never built. Listed here so nobody assumes the scanners cover them:
+
+- Config: settings.json launch-root placement detection
+- Config: MCP subdirectory-loss detection (flagging when subdir launches would lose a server)
+- Memory: dead flag/setting references (setting keys named in memory not in active config)
+- Memory: fuzzy-match moved path suggestions
+- Debris: dead @-imports across all CLAUDE.md files (currently in assets domain only)
+- Debris: half-renamed identifier detection
+- Temp: abandoned git worktree detection
+
 ## Changelog
+
+### 2026-07-19 — v2.0.1
+
+- State relocated to `~/.claude/cc-health-state.json` (outside the plugin tree; survives upgrades). Legacy in-plugin state migrates automatically on first read.
+- All plugin paths now use `${CLAUDE_PLUGIN_ROOT}` — install location no longer hardcoded.
+- Removed hardcoded Opus model pins (classifier and `--deep` drift check inherit the session model).
+- Version domain: first-run baseline handling, missing/stale changelog guards, classifier failure contract.
+- Scanner failure handling and `full`-mode aggregation rules documented in the skill.
+- Documented the chats `global` subcommand; wired reference docs into the report flow.
 
 ### 2026-07-18
 

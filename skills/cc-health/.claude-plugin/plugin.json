@@ -1,6 +1,6 @@
 {
   "name": "cc-health",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Comprehensive Claude Code infrastructure audit — 7 domains covering conversations, config, assets, memory, version compat, debris, and temp files.",
   "author": {
     "name": "cc-health contributors"

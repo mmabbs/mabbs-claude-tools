@@ -9,20 +9,17 @@ from pathlib import Path
 import pytest
 
 SCRIPT = Path(__file__).parent.parent / "scripts" / "cc-health-assets.py"
-STATE_FILE = Path(__file__).parent.parent / "state" / ".cc-health-state.json"
 
 
 @pytest.fixture(autouse=True)
-def clean_trigger_clash_state():
-    """Remove trigger clash state before and after tests to keep them hermetic."""
-    def _clean():
-        if STATE_FILE.exists():
-            state = json.loads(STATE_FILE.read_text())
-            state.pop("trigger_clashes", None)
-            STATE_FILE.write_text(json.dumps(state, indent=2))
-    _clean()
-    yield
-    _clean()
+def clean_trigger_clash_state(tmp_path_factory, monkeypatch):
+    """Point state at a fresh temp file per test to keep them hermetic.
+
+    The scanner subprocess inherits CC_HEALTH_STATE_FILE, so it never
+    touches the real ~/.claude/cc-health-state.json.
+    """
+    state_file = tmp_path_factory.mktemp("cc-health-state") / "state.json"
+    monkeypatch.setenv("CC_HEALTH_STATE_FILE", str(state_file))
 
 
 def run_scanner(base_dir: str, threshold: float | None = None, all_clashes: bool = False) -> dict:

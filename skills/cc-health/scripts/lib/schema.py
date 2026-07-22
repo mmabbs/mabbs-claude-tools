@@ -5,6 +5,7 @@ All scanners produce an AuditReport as JSON to stdout.
 """
 
 import json
+import os
 import sys
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -13,7 +14,15 @@ from typing import Any
 
 # lib/schema.py lives at <plugin-root>/scripts/lib/schema.py
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent.parent
-STATE_FILE = PLUGIN_ROOT / "state" / ".cc-health-state.json"
+
+# State lives OUTSIDE the plugin tree so upgrades (cp -r over the install,
+# marketplace update) don't wipe lastSeenVersion and clash baselines.
+# CC_HEALTH_STATE_FILE overrides the location (used by tests).
+STATE_FILE = Path(
+    os.environ.get("CC_HEALTH_STATE_FILE", Path.home() / ".claude" / "cc-health-state.json")
+)
+# Pre-2.0.1 location, migrated on first read
+LEGACY_STATE_FILE = PLUGIN_ROOT / "state" / ".cc-health-state.json"
 
 
 @dataclass
@@ -56,11 +65,24 @@ def progress(msg: str):
 
 
 def load_state() -> dict:
-    """Load the state file. Returns empty dict if missing or corrupt."""
+    """Load the state file. Returns empty dict if missing or corrupt.
+
+    Falls back to the legacy in-plugin location once, migrating its
+    contents to STATE_FILE. Skipped under CC_HEALTH_STATE_FILE so tests
+    never inherit a real user's legacy state.
+    """
     try:
         return json.loads(STATE_FILE.read_text())
     except (FileNotFoundError, json.JSONDecodeError):
-        return {}
+        pass
+    if "CC_HEALTH_STATE_FILE" not in os.environ:
+        try:
+            state = json.loads(LEGACY_STATE_FILE.read_text())
+            save_state(state)
+            return state
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+    return {}
 
 
 def save_state(state: dict):
