@@ -63,6 +63,16 @@ Anthropic's skill-creator plugin and this skill are complementary halves: skill-
 
 ## Changelog
 
+### 2026-07-22
+
+- Self-review release: ran skill-critic on itself (steelman: 9 criticisms; defender: 5 WEAK, 2 UNCERTAIN, 2 STRONG; blind-tester: fresh-install walkthrough).
+- Fixed a broken validator invocation — `${CLAUDE_SKILL_DIR}` is not a real environment variable. The instructions now use the skill's base directory, which Claude Code states when the skill loads.
+- Preparation now verifies the three agent files are installed before any spawn, so a skipped install step fails with a clear diagnostic instead of a cryptic runtime error.
+- Abort-on-agent-failure clarified to "any of the three agents" and now states its reasoning: the synthesis's value is triangulation across three perspectives, and partial output can read as convincing while its claims go untested.
+- Validator upgrades: missing `pyyaml` skips with an actionable message instead of a traceback; new bundled-agent coverage check (agent types spawned in SKILL.md must have a matching `agents/<name>.md`, unspawned bundles warn as orphans); usage message echoes the actual invocation.
+- Blind-tester prompt spec now includes the skill's file path; the Context input may include a test scenario for the blind-tester.
+- Description broadened ("pre-existing" dropped); steelman agent declares explicit `tools: Read, Glob, Grep`; corrected a stale self-reference in `references/content-patterns.md`.
+
 ### 2026-07-17
 
 - First public release. Portable script paths, bundled agent definitions, validator accepts the `effort` frontmatter field.

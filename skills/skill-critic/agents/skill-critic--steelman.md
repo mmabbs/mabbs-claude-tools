@@ -6,6 +6,10 @@ description: |
 model: claude-opus-4-6
 effort: max
 color: red
+tools:
+  - Read
+  - Glob
+  - Grep
 disallowedTools: Write, Edit, Bash, Agent, Workflow, NotebookEdit
 ---
 

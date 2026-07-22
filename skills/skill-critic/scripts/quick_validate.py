@@ -3,13 +3,19 @@
 Structural validation for Claude Code skills.
 
 Checks: frontmatter validity, naming conventions, description length,
-body word count, referenced file existence, orphaned resources.
+body word count, referenced file existence, orphaned resources,
+bundled agent coverage.
 """
 
 import sys
 import re
-import yaml
 from pathlib import Path
+
+try:
+    import yaml
+except ModuleNotFoundError:
+    print("pyyaml not installed — run 'pip install pyyaml' to enable structural validation. Skipping.")
+    sys.exit(0)
 
 RESOURCE_DIRS = ("references", "scripts", "assets")
 IGNORED_FILES = {"__init__.py", ".DS_Store"}
@@ -150,6 +156,26 @@ def check_orphaned_resources(body, skill_path):
     return []
 
 
+def check_agent_files(body, skill_path):
+    """Cross-check agent types spawned in the body against bundled agents/ files.
+
+    Only runs when the skill bundles an agents/ directory — skills may
+    legitimately spawn agents that are installed separately.
+    """
+    errors = []
+    warnings = []
+    agents_dir = skill_path / "agents"
+    if not agents_dir.is_dir():
+        return errors, warnings
+    referenced = set(re.findall(r"(?:subagent_type|agent type):?\s*`([a-z0-9-]+)`", body))
+    bundled = {f.stem for f in agents_dir.glob("*.md")}
+    for name in sorted(referenced - bundled):
+        errors.append(f"Spawned agent type '{name}' has no matching agents/{name}.md")
+    for name in sorted(bundled - referenced):
+        warnings.append(f"Bundled agent never spawned in SKILL.md (orphan): agents/{name}.md")
+    return errors, warnings
+
+
 def validate_skill(skill_path):
     """Validate a skill directory. Returns (valid, messages, warnings)."""
     skill_path = Path(skill_path)
@@ -170,6 +196,9 @@ def validate_skill(skill_path):
         all_warnings.extend(check_body_word_count(body))
         all_errors.extend(check_referenced_files(body, skill_path))
         all_warnings.extend(check_orphaned_resources(body, skill_path))
+        agent_errors, agent_warnings = check_agent_files(body, skill_path)
+        all_errors.extend(agent_errors)
+        all_warnings.extend(agent_warnings)
 
     if all_errors:
         return False, "; ".join(all_errors), all_warnings
@@ -179,7 +208,7 @@ def validate_skill(skill_path):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python -m scripts.quick_validate <skill_directory>")
+        print(f"Usage: python {sys.argv[0]} <skill_directory>")
         sys.exit(1)
 
     valid, message, warnings = validate_skill(sys.argv[1])

@@ -160,7 +160,7 @@ The single most important question: **does the parent do anything with the agent
 - Spawns one agent, does trivial formatting (adding a header), relays
 - The "orchestrator" is just a prompt-forwarding layer
 
-**What "good" looks like:** skill-critic itself — spawns defender + blind-tester in parallel, then cross-references their verdicts in Step 6 to decide which criticisms survive. The synthesis is real work neither agent could do alone.
+**What "good" looks like:** skill-critic itself — spawns steelman + blind-tester in parallel, has the defender rate each criticism, then cross-references all three outputs in its synthesis (03.4) to decide which criticisms survive. The synthesis is real work no single agent could do alone.
 
 **What "bad" looks like:** a skill that spawns a single research agent and returns its report unchanged. The skill adds ~1,500 words of instructions per invocation but produces identical output to invoking the agent directly.
 

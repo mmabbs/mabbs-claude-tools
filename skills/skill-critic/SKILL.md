@@ -1,6 +1,6 @@
 ---
 name: skill-critic
-description: Critique and refine pre-existing Claude Code skills. Use when reviewing a skill's instructions for gaps, ambiguity, or structural issues. Runs adversarial critique, structured defense, and blind usability testing, then proposes targeted fixes.
+description: Critique and refine Claude Code skills. Use when reviewing a skill's instructions for gaps, ambiguity, or structural issues. Runs adversarial critique, structured defense, and blind usability testing, then proposes targeted fixes.
 argument-hint: <path-to-skill-folder>
 ---
 
@@ -23,7 +23,7 @@ argument-hint: <path-to-skill-folder>
   - 04.4 Structural Checklist
 - 05 Scripts Reference
 
-Critique and refine pre-existing Claude Code skills through adversarial review, structural validation, and targeted fixes.
+Critique and refine Claude Code skills through adversarial review, structural validation, and targeted fixes.
 
 ## 01 Skill Anatomy
 
@@ -38,7 +38,7 @@ The description is the most important line in any skill. Everything else is wast
 ## 02 Inputs
 
 - **Path** (required): path to the skill folder being critiqued. Pass as the argument after the skill name.
-- **Context** (optional): comments for the orchestrator and/or sub-agents — what the skill is for, known issues, areas of concern, recent failures. Include in the message body after the path.
+- **Context** (optional): comments for the orchestrator and/or sub-agents — what the skill is for, known issues, areas of concern, recent failures. May include a test scenario for the blind-tester to attempt. Include in the message body after the path.
 
 ## 03 Critique Flow
 
@@ -56,9 +56,13 @@ Read the SKILL.md at the provided path. Read all bundled resources (references/,
 
 Run `scripts/quick_validate.py` against the skill directory:
 
-    python "${CLAUDE_SKILL_DIR}/scripts/quick_validate.py" <path-to-skill>
+    python <skill-base-dir>/scripts/quick_validate.py <path-to-skill>
 
-The script checks frontmatter validity, description length, body word count, referenced file existence, and orphaned resources. Record any failures or warnings — they feed into the critique.
+`<skill-base-dir>` is this skill's own base directory — Claude Code states it when the skill loads.
+
+The script checks frontmatter validity, description length, body word count, referenced file existence, orphaned resources, and bundled agent coverage. Record any failures or warnings — they feed into the critique.
+
+Verify the three agent types this flow spawns — `skill-critic--steelman`, `skill-critic--blind-tester`, `skill-critic--defender` — are installed (their definition files exist in `~/.claude/agents/`). If any are missing, stop and point the user to the README's installation steps; every spawn below would otherwise fail.
 
 ### 03.2 Adversarial Critique + Blind Test
 
@@ -77,6 +81,7 @@ Spawn two agents in parallel:
 **Blind-tester** (subagent_type: `skill-critic--blind-tester`): Tests the skill from a fresh perspective. The prompt must include:
 
 - The full SKILL.md text, inlined — same rule as the steelman
+- The file path so the agent can read bundled resources — its scope constraint depends on receiving it
 - A representative task that exercises the skill's primary flow end-to-end. Construct a plausible user prompt for the skill's most common use case, not an edge case — a bad task produces a blind-test that misses real gaps regardless of skill quality.
 - Any contextual comments from the user
 
@@ -95,7 +100,7 @@ The defender returns verdicts per criticism: **STRONG** (keep as-is), **WEAK** (
 
 ### 03.4 Synthesis
 
-If either agent failed (crashed or returned unusable output), report the failure to the user and abort. The run is forfeit — start fresh in a new session.
+If any of the three agents failed (crashed or returned unusable output), report the failure to the user and abort. The run is forfeit — start fresh in a new session. The synthesis's value is triangulation across three independent perspectives; with one missing, the surviving output can still read as convincing while its claims go untested — exactly the unexamined-opinion failure this skill exists to prevent.
 
 Cross-reference steelman critiques, defender verdicts, and blind-tester findings:
 
@@ -168,7 +173,7 @@ These are questions, not requirements — not every skill needs all of these:
 
 ## 05 Scripts Reference
 
-Run with `python "${CLAUDE_SKILL_DIR}/scripts/<name>.py"` — works from any directory.
+Run with `python <skill-base-dir>/scripts/<name>.py` — works from any directory. `<skill-base-dir>` is this skill's base directory, stated when the skill loads.
 
 | Script              | Purpose                                  | Dependencies |
 | ------------------- | ---------------------------------------- | ------------ |
